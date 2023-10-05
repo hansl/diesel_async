@@ -177,6 +177,7 @@ Diesel-async offers several configurable features:
 * `deadpool`: Enables support for the `deadpool` connection pool implementation
 * `bb8`: Enables support for the `bb8` connection pool implementation
 * `mobc`: Enables support for the `mobc` connection pool implementation
+* `postgres-native-tls`: Enables using the `postgres-native-tls` crate for TLS support when making a connection.
 
 By default no features are enabled.
 

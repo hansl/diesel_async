@@ -121,7 +121,16 @@ impl AsyncConnection for AsyncPgConnection {
     type TransactionManager = AnsiTransactionManager;
 
     async fn establish(database_url: &str) -> ConnectionResult<Self> {
-        let (client, connection) = tokio_postgres::connect(database_url, tokio_postgres::NoTls)
+        // If we have the `postgres-native-tls` feature, use native TLS support.
+        let tls = {
+            #[cfg(feature = "postgres-native-tls")]
+            { postgres_native_tls::MakeTlsConnector }
+
+            #[cfg(not(feature = "postgres-native-tls"))]
+            { tokio_postgres::NoTls }
+        };
+
+        let (client, connection) = tokio_postgres::connect(database_url, tls)
             .await
             .map_err(ErrorHelper)?;
         tokio::spawn(async move {
